@@ -1,4 +1,3 @@
-import { triggerAsyncId } from "async_hooks";
 import mongoose, {Schema, Document} from "mongoose";
 
 export interface ICourse extends Document{

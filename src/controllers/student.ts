@@ -1,5 +1,5 @@
 // const { response } = require("express");
-import {response, Response, Request} from "express";
+import {Response, Request} from "express";
 import bcrypt from "bcryptjs";
 import {MIN_PASS_LEN} from "../constants";
 import Student from "../models/student";
