@@ -1,8 +1,10 @@
 //imports
-const express = require('express');
+// const express = require('express');
+// const mongoose = require("mongoose");
 const cors = require('cors');
-const mongoose = require("mongoose");
-const studentRoutes = require('./routes/student');
+import express from "express";
+import mongoose from "mongoose";
+import studentRoutes from './routes/student';
 require("dotenv").config();
 
 //setup express
@@ -15,7 +17,7 @@ app.listen(PORT, ()=>console.log("Server started on port", PORT));
 
 // setup mongoose
 console.log("Mongo con string", process.env.MONGO_CON_STRING);
-mongoose.connect(process.env.MONGO_CON_STRING, {useNewUrlParser : true, useUnifiedTopology: true, useCreateIndex: true}, (err)=>{
+mongoose.connect(process.env.MONGO_CON_STRING, {useNewUrlParser : true, useUnifiedTopology: true, useCreateIndex: true}, (err: any)=>{
     if(err) throw err;
     console.log("Mongo db connection established");
 });
