@@ -3,9 +3,20 @@ import {Response, Request} from "express";
 import bcrypt from "bcryptjs";
 import {MIN_PASS_LEN} from "../constants";
 import Student from "../models/student";
+import Teacher from "../models/teacher";
 import Batch from "../models/batch";
 const getStudent = async (request: Request, response:Response)=>{
-    return response.status(400).json({name: "Pratik Gupta", batch:"Btech 2017 CSE"});
+    try {
+        const student = await Student.findById(request.params.id);
+        if (student == null) {
+            return response.status(404).json({ msg: `Student with id ${request.params.id} doesn't exisit` });
+        }
+        return response.json(student);
+    } 
+    catch (err) {
+        response.status(500).json({ error: err.message });
+    }
+    // return response.status(400).json({name: "Pratik Gupta", batch:"Btech 2017 CSE"});
 }
 
 const postStudent = async (request: Request, response:Response)=>{
@@ -23,14 +34,18 @@ const postStudent = async (request: Request, response:Response)=>{
             return response.status(400).json({msg: "Passwords do not match"});
         }
 
-        const existingUser = await Student.find({email: email});
-        if(existingUser.length>0){
+        const existingStudent = await Student.find({email: email});
+        if(existingStudent.length>0){
+            return response.status(400).json({msg: "User with this email already exists!"});
+        }
+        const existingTeacher = await Teacher.find({email: email});
+        if(existingTeacher.length>0){
             return response.status(400).json({msg: "User with this email already exists!"});
         }
 
         const salt = await bcrypt.genSalt(10);
         const passwordHash = await bcrypt.hash(password, salt);
-        console.log(passwordHash);
+        // console.log(passwordHash);
 
         let studentBatch = await Batch.findOne({degree: degree, year: year, stream:stream});
         if(studentBatch === null){

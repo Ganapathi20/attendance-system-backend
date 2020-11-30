@@ -4,7 +4,6 @@
 const cors = require('cors');
 import express from "express";
 import mongoose from "mongoose";
-import studentRoutes from './routes/student';
 require("dotenv").config();
 
 //setup express
@@ -25,4 +24,10 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 //setup routes
+import studentRoutes from './routes/student';
+import teacherRoutes from './routes/teacher';
+import courseRoutes from './routes/course';
+
 app.use("/api/student", studentRoutes);
+app.use("/api/teacher", teacherRoutes);
+app.use("/api/course", courseRoutes);
