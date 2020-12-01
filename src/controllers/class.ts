@@ -19,22 +19,37 @@ const getClass = async (request: Request, response: Response) => {
 }
 
 const postClass = async (request: Request, response: Response) => {
-    let {topic, courseId, hour, minute, date, month, year} : {topic: string, courseId: string, hour: number, minute: number, date: number, month: number, year: number} =  request.body;
-    if(!topic || !courseId || !hour || !minute || !date || !month || !year){
-        response.status(400).json({msg: `Not all fields are entered`});
-    }
-    let curDate = new Date(year, month, date, hour, minute);
-    let course = await Course.findById(courseId);
-    if(course === null){
-        response.status(404).json({msg: `Course with id ${courseId} doesn't exist`})
-    }
-    let newClass = new Class({
-        topic: topic,
-        time: curDate,
-        course: course?._id
-    });
+    try{
 
-    return response.json(newClass);
+        let {topic, courseId, hour, minute, date, month, year} : {topic: string, courseId: string, hour: number, minute: number, date: number, month: number, year: number} =  request.body;
+        // Note that month is index of the month
+        if(!topic || !courseId || !hour || !minute || !date ){
+            // console.log(topic, courseId, hour, minute, date);
+            response.status(400).json({msg: `Not all fields are entered`});
+        }
+        if(!month){
+            month = new Date().getMonth();
+        }
+        if(!year){
+            year = new Date().getFullYear();
+        }
+        let curDate = new Date(year, month, date, hour, minute);
+        let course = await Course.findById(courseId);
+        if(course === null){
+            response.status(404).json({msg: `Course with id ${courseId} doesn't exist`})
+        }
+        let newClass = new Class({
+            topic: topic,
+            time: curDate,
+            course: course?._id
+        });
+        newClass.save();
+        
+        return response.json(newClass);
+    }
+    catch(err){
+        response.status(500).json({error: err.message});
+    }
 }
 
 export default {

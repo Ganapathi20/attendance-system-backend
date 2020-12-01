@@ -10,9 +10,7 @@ require("dotenv").config();
 const app = express();
 app.use(express.json());
 app.use(cors());
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, ()=>console.log("Server started on port", PORT));
-// app.get("/", (request, response, next)=>response.status(400).json({msg: "hello"}));
+
 
 // setup mongoose
 console.log("Mongo con string", process.env.MONGO_CON_STRING);
@@ -27,7 +25,13 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 import studentRoutes from './routes/student';
 import teacherRoutes from './routes/teacher';
 import courseRoutes from './routes/course';
-
+import classRoutes from './routes/class';
 app.use("/api/student", studentRoutes);
 app.use("/api/teacher", teacherRoutes);
 app.use("/api/course", courseRoutes);
+app.use("/api/class", classRoutes);
+
+// Starting the express server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, ()=>console.log("Server started on port", PORT));
+// app.get("/", (request, response, next)=>response.status(400).json({msg: "hello"}));
