@@ -6,6 +6,12 @@ declare global {
         // PORT?: string;
         // PWD: string;
         MONGO_CON_STRING: string;
+        JWT_SECRET: string;
+      }
+    }
+    namespace Express {
+      interface Request {
+        [key: string]: any;
       }
     }
   }

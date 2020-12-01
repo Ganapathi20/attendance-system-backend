@@ -61,7 +61,7 @@ const postStudent = async (request: Request, response:Response)=>{
             password: passwordHash,
             batch: studentBatch,
         });
-        newStudent.save();
+        await newStudent.save();
         response.json(newStudent);
 
     }
