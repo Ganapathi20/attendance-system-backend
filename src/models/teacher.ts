@@ -8,7 +8,7 @@ export interface ITeacher extends Document{
     courses: [ICourse["_id"]];
 }
 
-const TeacherSchema = new Schema({
+const teacherSchema = new Schema({
     email: {type:String, match:/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/, unique:true},
     firstName: {type:String, required:true},
     lastName: {type:String, required:true},
@@ -17,10 +17,10 @@ const TeacherSchema = new Schema({
     courses: [{type:mongoose.Schema.Types.ObjectId, ref:'Course'}]
 });
 
-TeacherSchema.methods.toJSON = function(this:ITeacher){
+teacherSchema.methods.toJSON = function(this:ITeacher){
     var obj = this.toObject();
     delete obj.password;
     return obj;
 }
 
-export default mongoose.model<ITeacher>('Teacher', TeacherSchema);
+export default mongoose.model<ITeacher>('Teacher', teacherSchema);

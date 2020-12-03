@@ -5,10 +5,10 @@ export interface ICourse extends Document{
     semester: string,
 }
 
-const CourseSchema: Schema = new Schema({
+const courseSchema: Schema = new Schema({
     name: {type: String, required:true},
     semester: {type:String, enum:["Autumn", "Spring"], get: (v: string)=>v[0].toUpperCase() + v.slice(1).toLowerCase(), set: (v:string)=>v[0].toUpperCase() + v.slice(1).toLowerCase(), required:true},
     year: {type: Number, required:true}, //TODO: enter a validation for year
 });
 
-export default mongoose.model<ICourse>("Course", CourseSchema);
+export default mongoose.model<ICourse>("Course", courseSchema);

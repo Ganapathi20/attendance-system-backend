@@ -7,10 +7,10 @@ export interface IClass extends Document{
     topic: string;
 }
 
-const ClassSchema: Schema = new Schema({
+const classSchema: Schema = new Schema({
     course: {type: mongoose.Schema.Types.ObjectId, ref:'Course', required:true},
     time: {type:Date, required:true},
     topic: {type:String},
 });
 
-export default mongoose.model<IClass>("Class", ClassSchema);
+export default mongoose.model<IClass>("Class", classSchema);
