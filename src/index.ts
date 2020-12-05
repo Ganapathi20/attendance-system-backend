@@ -27,11 +27,14 @@ import teacherRoutes from './routes/teacher';
 import courseRoutes from './routes/course';
 import classRoutes from './routes/class';
 import authRoutes from './routes/auth';
+import attRoutes from './routes/attendance';
+
 app.use("/api/student", studentRoutes);
 app.use("/api/teacher", teacherRoutes);
 app.use("/api/course", courseRoutes);
 app.use("/api/class", classRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/attendance", attRoutes);
 
 // Starting the express server
 const PORT = process.env.PORT || 5000;
