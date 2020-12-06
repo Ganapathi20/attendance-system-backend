@@ -13,7 +13,6 @@ const teacherSchema = new Schema({
     firstName: {type:String, required:true},
     lastName: {type:String, required:true},
     password: {type:String, required:true},
-    batch: {type: mongoose.Schema.Types.ObjectId, ref:'Batch'},
     courses: [{type:mongoose.Schema.Types.ObjectId, ref:'Course'}]
 });
 

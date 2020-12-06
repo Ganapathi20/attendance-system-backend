@@ -1,4 +1,5 @@
 import mongoose, {Schema, Document} from "mongoose";
+import student from "../controllers/student";
 import { IBatch } from "./batch";
 import { ICourse } from "./course";
 export interface IStudent extends Document{
@@ -8,7 +9,8 @@ export interface IStudent extends Document{
     password: string;
     batch: IBatch["_id"];
     // attendance: [{course:ICourse["_id"], present:number, absent:number}]
-    courses: ICourse["_id"];
+    courses: [ICourse["_id"]];
+    registerCourse(this:IStudent, course: ICourse | ICourse["_id"]): Promise<IStudent>;
 }
 
 const studentSchema = new Schema({
@@ -26,6 +28,16 @@ studentSchema.methods.toJSON = function(this:IStudent){
     var obj = this.toObject();
     delete obj.password;
     return obj;
+}
+
+studentSchema.methods.registerCourse = async function(this:IStudent, course: ICourse){
+    mongoose.model('Student').update({_id: this._id, 'courses._id': {$ne: course._id}}, 
+    {$push: {courses: course}});
+    await mongoose.model('Student').update({_id: this._id}, {$addToSet: {courses: course._id}});
+    // this.courses.push(course);
+    // await this.save();
+    let  updatedUser = await  mongoose.model('Student').findById(this._id);
+    return updatedUser as IStudent;
 }
 
 export default mongoose.model<IStudent>('Student', studentSchema);

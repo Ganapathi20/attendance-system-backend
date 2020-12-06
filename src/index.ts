@@ -13,10 +13,12 @@ app.use(cors());
 
 
 // setup mongoose
+import exampleDocuments from "./models/exampleDocuments";
 console.log("Mongo con string", process.env.MONGO_CON_STRING);
 mongoose.connect(process.env.MONGO_CON_STRING, {useNewUrlParser : true, useUnifiedTopology: true, useCreateIndex: true}, (err: any)=>{
     if(err) throw err;
     console.log("Mongo db connection established");
+    exampleDocuments.init();
 });
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));

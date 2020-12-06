@@ -3,11 +3,11 @@ import { Request, Response } from "express";
 import { resolve } from "path";
 import { clearScreenDown } from "readline";
 import Course from "../models/course";
-import Class, { IClass } from "../models/class";
+import ClassModel, { IClass } from "../models/class";
 
 const getClass = async (request: Request, response: Response) => {
     try {
-        const classInstance = await Class.findOne({ "_id": request.params.id }).populate('course');
+        const classInstance = await ClassModel.findOne({ "_id": request.params.id }).populate('course');
         if (classInstance === null) {
             return response.status(404).json({ msg: `Class with id ${request.params.id} doesn't exisit` });
         }
@@ -38,12 +38,12 @@ const postClass = async (request: Request, response: Response) => {
         if(course === null){
             response.status(404).json({msg: `Course with id ${courseId} doesn't exist`})
         }
-        let newClass = new Class({
+        let newClass = new ClassModel({
             topic: topic,
             time: curDate,
             course: course?._id
         });
-        newClass.save();
+        await newClass.save();
         
         return response.json(newClass);
     }

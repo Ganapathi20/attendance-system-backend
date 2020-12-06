@@ -1,3 +1,7 @@
+import { ICourse } from "./src/models/course";
+import { IStudent } from "./src/models/student";
+import { ITeacher } from "./src/models/teacher";
+
 declare global {
     namespace NodeJS {
       interface ProcessEnv {
@@ -11,6 +15,10 @@ declare global {
     }
     namespace Express {
       interface Request {
+        userId?: string;
+        student: IStudent;
+        teacher: ITeacher;
+        newCourse: ICourse;
         [key: string]: any;
       }
     }

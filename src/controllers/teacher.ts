@@ -1,5 +1,6 @@
 import { Response, Request } from "express";
 import bcrypt from "bcryptjs";
+import SALT from "../bcrypt-salt";
 import { MIN_PASS_LEN } from "../constants";
 import Teacher from "../models/teacher";
 import Student from "../models/student";
@@ -41,8 +42,8 @@ const postTeacher = async (request: Request, response: Response) => {
             return response.status(400).json({ msg: "User with this email already exists!" });
         }
 
-        const salt = await bcrypt.genSalt(10);
-        const passwordHash = await bcrypt.hash(password, salt);
+        // const salt = await bcrypt.genSalt(10);
+        const passwordHash = await bcrypt.hash(password, SALT);
         // console.log(passwordHash);
 
         const newTeacher = new Teacher({
@@ -60,7 +61,18 @@ const postTeacher = async (request: Request, response: Response) => {
     }
 }
 
+const getMyCourses = async (request: Request, response: Response) => {
+    try {
+        let popTeacher = await Teacher.findById(request.userId).populate({path: "courses", model:'Course', populate: {path: 'classes',  model: 'Class'}}).exec();
+        return response.status(200).json({courses: popTeacher?.courses});
+    }
+    catch (err){
+        response.status(500).json({ error: err.message });
+    }
+}
+
 export default {
     getTeacher,
     postTeacher,
+    getMyCourses,
 }
