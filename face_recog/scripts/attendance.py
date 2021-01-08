@@ -21,6 +21,7 @@ def sheet(Time):
 
 def update():
     Path_of_image= "public/uploads/" + sys.argv[1]
+    # Path_of_image= sys.argv[1]
     Students=__MAIN__(Path_of_image) 
     subject=sheet(time[0])
     # Students = list(set(Students))

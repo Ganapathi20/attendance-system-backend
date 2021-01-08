@@ -6,6 +6,7 @@ sys.path.append("face_recog/face_encodings")
 import Encodings_and_Names
 
 def __MAIN__(img_path):
+    # print(img_path)
     students = []
     face_encodings=Encodings_and_Names.face_encodings()
     names = Encodings_and_Names.names()
@@ -33,6 +34,7 @@ def __MAIN__(img_path):
         return 'Unknown'
 
     img = cv2.imread(img_path)
+    # print(img.shape)
     face_encodings_in_image = get_face_encodings(img)
 
     if(len(face_encodings_in_image) == 1):

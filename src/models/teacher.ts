@@ -5,7 +5,7 @@ export interface ITeacher extends Document{
     firstName: string;
     lastName: string;
     password: string;
-    courses: [ICourse["_id"]];
+    courses: ICourse["_id"][];
 }
 
 const teacherSchema = new Schema({

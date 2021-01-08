@@ -24,10 +24,10 @@ const getStudent = async (request: Request, response: Response) => {
 
 const postStudent = async (request: Request, response: Response) => {
     try {
-        let { email, password: password, passwordCheck, firstName, lastName, degree, year, stream }: { email: string, password: string, passwordCheck: string, firstName: string, lastName: string, degree: string, year: number, stream: string } = request.body;
+        let { email, password: password, passwordCheck, firstName, lastName, degree, year, stream, roll }: { email: string, password: string, passwordCheck: string, firstName: string, lastName: string, degree: string, year: number, stream: string, roll: string } = request.body;
 
         // validation
-        if (!email || !password || !passwordCheck || !firstName || !lastName || !degree || !year || !stream) {
+        if (!email || !password || !passwordCheck || !firstName || !lastName || !degree || !year || !stream || !roll) {
             return response.status(400).json({ msg: "Not all fields are entered" });
         }
         if (password.toString().length < MIN_PASS_LEN) {
@@ -61,6 +61,7 @@ const postStudent = async (request: Request, response: Response) => {
             firstName: firstName,
             lastName: lastName,
             email: email,
+            roll: roll,
             password: passwordHash,
             batch: studentBatch,
         });
@@ -75,19 +76,32 @@ const postStudent = async (request: Request, response: Response) => {
 
 const getMyCourses = async (request: Request, response: Response) => {
     try {
-        let popStudent = await Student.findById(request.userId).populate({ path: 'courses', model: 'Course' }).exec();
+        let popStudent = await Student.findById(request.userId).populate({ path: 'courses', model: 'Course', populate:{path:'classes', model:'Class'}}).exec();
         // request.student = request.student.populate("courses");
         request.student = popStudent as IStudent;
         const studentId = request.student.id;
         let res = []
         for( let course of request.student.courses){
+            // console.log("course", course);
+            // console.log("classes", course.classes);
+            let finClasses  = [];
+            for (let classIns of course.classes){
+                if(classIns.isFinished === true){
+                    finClasses.push(classIns._id);
+                }
+            } 
+            let finClassLength = finClasses.length;
+            // console.log("-------classLength------", finClassLength);
+            // let courseId = course._id;
+            let attendance = await Attendance.find({"class" :{$in : finClasses}, student: studentId, isPresent: true});
+            // console.log("getMyCourses", attendance);
             course = course.toJSON();
-            let courseId = course._id;
-            let attendance = await Attendance.find({"class.course" : courseId, student: studentId}).exec();
             course.present = attendance.length;
-            course.absent = course.classes.length - attendance.length;
-            if(course.classes.length!=0){
-                course.attendance = attendance.length / course.classes.length;
+            course.absent = finClassLength - attendance.length;
+            // console.log("pre abs", course.present, course.absent);
+            if(finClassLength!=0){
+                course.attendance = attendance.length / finClassLength;
+                // console.log("final att", course.attendance);
             }
             else{
                 course.attendance = 1;

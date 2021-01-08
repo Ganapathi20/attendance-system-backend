@@ -1,3 +1,8 @@
 /node_modules
 .env
 /dist
+/face_recog/test_images
+/public/uploads
+/face_recog/face_encodings/__pycache__
+/face_recog/models/__pycache__
+/face_recog/scripts/__pycache__

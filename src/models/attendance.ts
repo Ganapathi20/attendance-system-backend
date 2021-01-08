@@ -15,5 +15,6 @@ const attendanceSchema = new Schema({
     isPresent: Boolean,
 });
 
+attendanceSchema.index({ "class": 1, "student": 1, isPresent: 1 }, { unique: true });
 export default mongoose.model<IAttendance>('Attendance', attendanceSchema);
 
